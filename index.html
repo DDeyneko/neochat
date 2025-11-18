@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NeoChat V9.0 Cloud</title>
+    <title>NeoChat V10.0 Ultimate</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -98,18 +98,20 @@
         .file-icon { font-size: 1.5rem; }
         .file-name { font-weight: 500; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        /* POLLS */
-        .poll-card { min-width: 250px; }
-        .poll-title { font-weight: bold; margin-bottom: 10px; display: block; font-size: 1rem; }
-        .poll-opt { margin-bottom: 8px; cursor: pointer; position: relative; }
-        .poll-bar-bg { height: 24px; background: rgba(255,255,255,0.1); border-radius: 12px; overflow: hidden; position: relative; }
-        .poll-bar-fill { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s ease-out; opacity: 0.7; }
-        .poll-text { position: absolute; left: 10px; top: 3px; font-size: 0.85rem; z-index: 2; display: flex; justify-content: space-between; width: 90%; }
+        /* POLLS IMPROVED */
+        .poll-card { min-width: 280px; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 12px; }
+        .poll-title { font-weight: bold; margin-bottom: 12px; display: block; font-size: 1rem; color: var(--primary); }
+        .poll-opt { margin-bottom: 8px; cursor: pointer; position: relative; padding: 2px; transition: 0.2s; }
+        .poll-opt:hover { opacity: 0.9; }
+        .poll-bar-bg { height: 30px; background: rgba(255,255,255,0.05); border-radius: 8px; overflow: hidden; position: relative; border: 1px solid rgba(255,255,255,0.1); }
+        .poll-bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), #ff8fa3); width: 0%; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0.8; }
+        .poll-text { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 0.85rem; z-index: 2; display: flex; justify-content: space-between; width: 90%; font-weight: 500; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
 
-        .reactions { display: flex; gap: 4px; margin-top: -10px; z-index: 2; padding: 0 5px; margin-left: 40px; }
+        .reactions { display: flex; gap: 4px; margin-top: -10px; z-index: 2; padding: 0 5px; margin-left: 40px; flex-wrap: wrap; }
         .msg.out .reactions { justify-content: flex-end; margin-left: 0; margin-right: 40px; }
-        .react-pill { background: rgba(30,30,30,0.9); border: 1px solid #555; border-radius: 10px; padding: 2px 6px; font-size: 0.75rem; cursor: pointer; }
-        .react-pill.active { border-color: var(--primary); color: var(--primary); }
+        .react-pill { background: rgba(30,30,30,0.9); border: 1px solid #555; border-radius: 10px; padding: 2px 8px; font-size: 0.75rem; cursor: pointer; transition: 0.2s; }
+        .react-pill:hover { transform: scale(1.1); }
+        .react-pill.active { border-color: var(--primary); color: var(--primary); background: rgba(255,75,110,0.1); }
 
         .media-img { max-width: 100%; border-radius: 12px; cursor: zoom-in; margin-top: 5px; max-height: 300px; object-fit: cover; }
         .audio-player { display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); padding: 8px 12px; border-radius: 24px; margin-top: 5px; min-width: 200px; }
@@ -120,21 +122,34 @@
         @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(255, 75, 110, 0.7); transform: scale(1); } 70% { box-shadow: 0 0 0 15px rgba(255, 75, 110, 0); transform: scale(1.1); } 100% { box-shadow: 0 0 0 0 rgba(255, 75, 110, 0); transform: scale(1); } }
         .rec-pulse { animation: pulse-red 1.5s infinite; background: #ff4b6e !important; color: white !important; }
 
-        /* CALL UI */
-        #call-overlay { position: fixed; inset: 0; z-index: 3000; background: rgba(0,0,0,0.9); display: none; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
-        .call-avatar { width: 120px; height: 120px; border-radius: 50%; background: #333; margin-bottom: 20px; border: 3px solid var(--primary); background-size: cover; background-position: center; box-shadow: 0 0 30px var(--primary); animation: pulse-call 2s infinite; }
-        .call-status { font-size: 1.2rem; opacity: 0.7; margin-bottom: 40px; }
-        .call-controls { display: flex; gap: 30px; }
-        .call-btn { width: 60px; height: 60px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; color: white; transition: 0.3s; }
-        .call-btn.accept { background: #00ff88; box-shadow: 0 0 20px #00ff88; }
-        .call-btn.reject { background: #ff4b6e; box-shadow: 0 0 20px #ff4b6e; }
-        .call-btn:hover { transform: scale(1.1); }
-        @keyframes pulse-call { 0% {box-shadow: 0 0 0 0 rgba(255, 75, 110, 0.4);} 70% {box-shadow: 0 0 0 30px rgba(255, 75, 110, 0);} 100% {box-shadow: 0 0 0 0 rgba(255, 75, 110, 0);} }
+        /* VIDEO CALL UI */
+        #call-overlay { position: fixed; inset: 0; z-index: 3000; background: #000; display: none; flex-direction: column; align-items: center; justify-content: center; }
+        #remote-video { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+        #local-video { width: 120px; height: 160px; object-fit: cover; position: absolute; top: 20px; right: 20px; border-radius: 12px; border: 2px solid rgba(255,255,255,0.3); background: #111; z-index: 3001; transition: 0.3s; cursor: pointer; }
+        #local-video:hover { transform: scale(1.05); border-color: var(--primary); }
+        
+        .call-info-ov { z-index: 3002; position: absolute; top: 40px; left: 20px; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
+        .call-avatar-ov { width: 80px; height: 80px; border-radius: 50%; background-size: cover; margin-bottom: 10px; border: 3px solid white; box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
+        
+        .call-controls-bar { z-index: 3002; position: absolute; bottom: 40px; display: flex; gap: 20px; background: rgba(0,0,0,0.5); padding: 15px 30px; border-radius: 40px; backdrop-filter: blur(10px); }
+        .c-btn { width: 50px; height: 50px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; cursor: pointer; color: white; transition: 0.2s; background: rgba(255,255,255,0.2); }
+        .c-btn:hover { background: rgba(255,255,255,0.4); transform: translateY(-3px); }
+        .c-btn.off { background: white; color: #333; position: relative; }
+        .c-btn.off::after { content: ''; position: absolute; width: 100%; height: 2px; background: #333; transform: rotate(45deg); }
+        .c-btn.hangup { background: #ff4b6e; width: 60px; height: 60px; font-size: 1.8rem; }
+        .c-btn.hangup:hover { background: #ff2e56; }
+        .c-btn.answer { background: #00ff88; width: 60px; height: 60px; font-size: 1.8rem; box-shadow: 0 0 20px #00ff88; animation: pulse-call 2s infinite; }
 
-        /* EMOJI PICKER */
-        #emoji-picker { position: absolute; bottom: 80px; right: 20px; background: rgba(30,30,30,0.95); border: 1px solid #555; padding: 10px; border-radius: 12px; display: none; grid-template-columns: repeat(6, 1fr); gap: 5px; width: 250px; height: 200px; overflow-y: auto; z-index: 50; }
-        .ep-item { font-size: 1.5rem; cursor: pointer; padding: 5px; text-align: center; border-radius: 5px; }
-        .ep-item:hover { background: rgba(255,255,255,0.1); }
+        @keyframes pulse-call { 0% {box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.4);} 70% {box-shadow: 0 0 0 20px rgba(0, 255, 136, 0);} 100% {box-shadow: 0 0 0 0 rgba(0, 255, 136, 0);} }
+
+        /* EMOJI PICKER IMPROVED */
+        #emoji-picker { position: absolute; bottom: 80px; right: 20px; background: rgba(30,30,30,0.95); border: 1px solid #555; border-radius: 12px; display: none; flex-direction: column; width: 300px; height: 300px; z-index: 50; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+        .ep-tabs { display: flex; background: rgba(0,0,0,0.3); border-bottom: 1px solid #444; overflow-x: auto; }
+        .ep-tab { padding: 10px; cursor: pointer; font-size: 1.2rem; opacity: 0.6; border: none; background: none; transition: 0.2s; }
+        .ep-tab:hover, .ep-tab.active { opacity: 1; background: rgba(255,255,255,0.05); }
+        .ep-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; padding: 10px; overflow-y: auto; flex: 1; }
+        .ep-item { font-size: 1.4rem; cursor: pointer; padding: 5px; text-align: center; border-radius: 5px; }
+        .ep-item:hover { background: rgba(255,255,255,0.2); transform: scale(1.2); }
 
         .input-bar { padding: 20px; background: rgba(0,0,0,0.2); backdrop-filter: blur(10px); border-top: var(--glass-border); display: flex; gap: 10px; align-items: center; position: relative; }
         #reply-preview { position: absolute; bottom: 100%; left: 0; width: 100%; background: rgba(20,20,20,0.9); padding: 10px 20px; border-top: 1px solid #333; display: none; justify-content: space-between; align-items: center; font-size: 0.9rem; }
@@ -149,6 +164,7 @@
         dialog::backdrop { background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); }
         .d-btn { width: 100%; padding: 12px; background: var(--primary) !important; color: white !important; border: none; border-radius: 8px; margin-top: 15px; cursor: pointer; font-weight: 600; }
         .d-label { display: block; margin-top: 15px; font-size: 0.9rem; opacity: 0.8; margin-bottom: 5px; }
+        .d-select { width: 100%; background: #111; color: white; padding: 10px; border-radius: 8px; border: 1px solid #444; margin-bottom: 10px; }
         .color-picker { width: 100%; height: 40px; border: none; cursor: pointer; background: none; }
 
         .poll-input { width: 100%; padding: 10px; background: #111; border: 1px solid #444; color: white; border-radius: 8px; margin-bottom: 8px; }
@@ -167,6 +183,8 @@
             aside.open { transform: translateX(0); box-shadow: 10px 0 50px rgba(0,0,0,0.5); }
             .menu-toggle { display: block; }
             .msg { max-width: 85%; }
+            #local-video { width: 90px; height: 120px; top: 10px; right: 10px; }
+            .call-controls-bar { width: 90%; justify-content: space-around; padding: 15px; }
         }
     </style>
 </head>
@@ -174,23 +192,33 @@
     <div id="drop-zone">Перетащите файл сюда</div>
 
     <div id="call-overlay">
-        <div id="call-avatar" class="call-avatar"></div>
-        <h2 id="call-name">User</h2>
-        <div id="call-status" class="call-status">Звонок...</div>
-        <div class="call-controls" id="call-incoming-ctrl" style="display:none;">
-            <button class="call-btn reject" onclick="rejectCall()">✕</button>
-            <button class="call-btn accept" onclick="acceptCall()">📞</button>
+        <video id="remote-video" autoplay playsinline></video>
+        <video id="local-video" autoplay playsinline muted></video>
+        
+        <div class="call-info-ov" id="call-info-wrap">
+            <div id="call-avatar-ov" class="call-avatar-ov"></div>
+            <h2 id="call-name-ov" style="margin:0; font-size:1.5rem;">User</h2>
+            <span id="call-status-ov" style="opacity:0.8">Соединение...</span>
         </div>
-        <div class="call-controls" id="call-active-ctrl" style="display:none;">
-            <button class="call-btn reject" onclick="endCall()">✕</button>
+
+        <div class="call-controls-bar" id="call-incoming-ctrl" style="display:none;">
+            <button class="c-btn hangup" onclick="rejectCall()">✕</button>
+            <button class="c-btn answer" onclick="acceptCall()">📞</button>
         </div>
-        <audio id="remote-audio" autoplay></audio>
+
+        <div class="call-controls-bar" id="call-active-ctrl" style="display:none;">
+            <button class="c-btn" id="btn-mic" onclick="toggleMic()">🎤</button>
+            <button class="c-btn" id="btn-cam" onclick="toggleCam()">📷</button>
+            <button class="c-btn" onclick="switchCam()">🔄</button> <button class="c-btn hangup" onclick="endCall()">✕</button>
+        </div>
+        
+        <audio id="remote-audio" autoplay style="display:none;"></audio>
     </div>
 
     <div id="auth-screen">
         <div class="auth-card">
-            <h1>NeoChat v9.0</h1>
-            <p style="opacity:0.7; margin-bottom:20px;">Voice Calls & Realtime Polls</p>
+            <h1>NeoChat v10.0</h1>
+            <p style="opacity:0.7; margin-bottom:20px;">Видеозвонки & Новые опросы</p>
             <div id="login-form">
                 <input type="text" id="l-user" class="auth-input" placeholder="Логин">
                 <input type="password" id="l-pass" class="auth-input" placeholder="Пароль">
@@ -221,7 +249,8 @@
                 <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
                 <div class="chat-info"><h2 id="chat-title">Выберите чат</h2><span id="chat-status">...</span></div>
                 <div>
-                    <button class="icon-btn" id="call-btn" onclick="startCallCheck()" style="display:none;">📞</button>
+                    <button class="icon-btn" id="video-btn" onclick="startCallCheck(true)" style="display:none;">📹</button>
+                    <button class="icon-btn" id="call-btn" onclick="startCallCheck(false)" style="display:none; margin-left:5px;">📞</button>
                     <button class="icon-btn" onclick="toggleSearch()">🔍</button>
                 </div>
             </div>
@@ -231,7 +260,10 @@
             <div id="messages"></div>
             <div id="typing-indicator"></div>
             
-            <div id="emoji-picker"></div>
+            <div id="emoji-picker">
+                <div class="ep-tabs" id="ep-tabs"></div>
+                <div class="ep-grid" id="ep-grid"></div>
+            </div>
 
             <div class="input-bar" id="input-bar" style="display:none;">
                 <div id="reply-preview">
@@ -262,20 +294,29 @@
     </dialog>
 
     <dialog id="settings-modal">
-        <div style="text-align:center;">
+        <div style="text-align:center; max-height:80vh; overflow-y:auto;">
             <h3>Профиль</h3>
             <div id="my-avatar-preview" class="prof-upload" onclick="document.getElementById('avatar-in').click()"></div>
             <input type="file" id="avatar-in" hidden accept="image/*">
             <input type="text" id="my-bio" class="auth-input" placeholder="Статус (Bio)">
-            <button class="d-btn" onclick="saveProfile()">Сохранить профиль</button>
+            
+            <hr style="border:0; border-top:1px solid #444; margin:15px 0;">
+            <h3>Устройства звонка</h3>
+            <span class="d-label">Микрофон</span>
+            <select id="audio-src" class="d-select"></select>
+            <span class="d-label">Камера</span>
+            <select id="video-src" class="d-select"></select>
+            
+            <hr style="border:0; border-top:1px solid #444; margin:15px 0;">
+            <h3>Тема</h3>
+            <span class="d-label">Акцент</span><input type="color" class="color-picker" id="cp-primary" value="#ff4b6e" oninput="updateTheme()">
+            <span class="d-label">Фон (старт)</span><input type="color" class="color-picker" id="cp-bg1" value="#1a1c2c" oninput="updateTheme()">
+            <span class="d-label">Фон (конец)</span><input type="color" class="color-picker" id="cp-bg2" value="#4a192c" oninput="updateTheme()">
+            
+            <button class="d-btn" onclick="saveProfile()">Сохранить</button>
+            <button class="d-btn" style="background:#444 !important;" onclick="logout()">Выйти</button>
+            <button class="d-btn" style="background:transparent !important; border:1px solid #555 !important;" onclick="document.getElementById('settings-modal').close()">Закрыть</button>
         </div>
-        <hr style="border:0; border-top:1px solid #444; margin:15px 0;">
-        <h3>Тема</h3>
-        <span class="d-label">Акцент</span><input type="color" class="color-picker" id="cp-primary" value="#ff4b6e" oninput="updateTheme()">
-        <span class="d-label">Фон (старт)</span><input type="color" class="color-picker" id="cp-bg1" value="#1a1c2c" oninput="updateTheme()">
-        <span class="d-label">Фон (конец)</span><input type="color" class="color-picker" id="cp-bg2" value="#4a192c" oninput="updateTheme()">
-        <button class="d-btn" style="background:#444 !important;" onclick="logout()">Выйти</button>
-        <button class="d-btn" style="background:transparent !important; border:1px solid #555 !important;" onclick="document.getElementById('settings-modal').close()">Закрыть</button>
     </dialog>
 
     <dialog id="room-modal">
@@ -306,6 +347,7 @@
 
     <script>
         // --- НАСТРОЙКИ ПОДКЛЮЧЕНИЯ ---
+        // Замените на ваш реальный домен или локальный IP
         const SERVER_URL = "neochat-server-khix.onrender.com"; 
 
         let ws, myNick, myAvatar, myBio;
@@ -318,24 +360,62 @@
         // --- WebRTC VARIABLES ---
         let localStream;
         let peerConnection;
+        
+        // Для глобальной работы нужен TURN сервер. 
+        // Здесь добавлен публичный STUN и пример того, как это должно выглядеть.
         const rtcConfig = { 
             iceServers: [
                 { urls: "stun:stun.l.google.com:19302" },
                 { urls: "stun:stun1.l.google.com:19302" },
                 { urls: "stun:stun2.l.google.com:19302" },
-                { urls: "stun:stun3.l.google.com:19302" },
-                { urls: "stun:stun4.l.google.com:19302" },
                 { urls: "stun:global.stun.twilio.com:3478" }
+                // Для работы за строгим NAT (корпорации, 4G) добавьте сюда TURN:
+                // { urls: "turn:your-turn-server.com", username: "user", credential: "password" }
             ] 
         };
         let inCall = false;
         let callTarget = null;
+        let isVideoCall = false;
+        let camEnabled = true;
+        let micEnabled = true;
 
-        // --- EMOJI INIT ---
-        const emojis = ["😀","😂","😍","😎","😭","😡","👍","👎","🔥","❤️","🎉","💩","🤔","😱","👋","🙏","👻","💀","👀","💪"];
-        const ep = document.getElementById('emoji-picker');
-        emojis.forEach(e => { const s=document.createElement('div'); s.className='ep-item'; s.innerText=e; s.onclick=()=>{ document.getElementById('msg-in').value+=e; ep.style.display='none'; }; ep.appendChild(s); });
+        // --- EMOJI DATA ---
+        const emojiData = {
+            "Частые": ["😀","😂","😍","😎","😭","😡","👍","👎","🔥","❤️","🎉","🤔","👋","🙏"],
+            "Лица": ["😀","😃","😄","😁","😆","😅","😂","🤣","🥲","☺️","😊","😇","🙂","🙃","😉","😌","😍","🥰","😘","😗","😙","😚","😋","😛","😝","😜","🤪","🤨","🧐","🤓","😎","🥸","🤩","🥳","😏","😒","😞","😔","😟","😕","🙁","☹️","😣","😖","😫","😩","🥺","😢","😭","😤","😠","😡","🤬","🤯","😳","🥵","🥶","😱","😨","😰","😥","😓","🤗","🤔","🤭","🤫","🤥","😶","😐","😑","😬","🙄","😯","😦","😧","😮","😲","🥱","😴","🤤","😪","😵","🤐","🥴","🤢","🤮","🤧","😷","🤒","🤕"],
+            "Жесты": ["👋","🤚","🖐️","✋","🖖","👌","🤌","🤏","✌️","🤞","🤟","🤘","🤙","👈","👉","👆","🖕","👇","☝️","👍","👎","✊","👊","🤛","🤜","👏","🙌","👐","🤲","🤝","🙏","✍️","💅","🤳","💪"],
+            "Разное": ["💩","👻","💀","👽","👾","🤖","🎃","😺","😸","😹","😻","😼","😽","🙀","😿","😾","👀","🔥","🌈","☀️","🌙","⭐","🍎","🍔","🍕","🚗","✈️","🚀","⚽","🎮","🎲","🎨","🎵","💡","💣","❤️","💔","💯","💢","💤"]
+        };
 
+        // Инициализация эмодзи-пикера
+        const epGrid = document.getElementById('ep-grid');
+        const epTabs = document.getElementById('ep-tabs');
+        
+        function renderEmojis(category) {
+            epGrid.innerHTML = '';
+            emojiData[category].forEach(e => {
+                const s = document.createElement('div');
+                s.className = 'ep-item';
+                s.innerText = e;
+                s.onclick = () => { document.getElementById('msg-in').value += e; document.getElementById('emoji-picker').style.display='none'; };
+                epGrid.appendChild(s);
+            });
+        }
+
+        Object.keys(emojiData).forEach((cat, idx) => {
+            const btn = document.createElement('button');
+            btn.className = `ep-tab ${idx===0?'active':''}`;
+            btn.innerText = cat === "Частые" ? "🕒" : cat === "Лица" ? "😀" : cat === "Жесты" ? "✌️" : "#️⃣";
+            btn.onclick = (e) => {
+                document.querySelectorAll('.ep-tab').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                renderEmojis(cat);
+            };
+            epTabs.appendChild(btn);
+        });
+        renderEmojis("Частые");
+
+        // --- APP INIT ---
         function toggleAuth() { const l=document.getElementById('login-form'), r=document.getElementById('reg-form'); l.style.display=l.style.display==='none'?'block':'none'; r.style.display=r.style.display==='none'?'block':'none'; }
         function $(id) { return document.getElementById(id); }
         
@@ -344,7 +424,6 @@
             const p=$('l-pass').value.trim() || $('r-pass').value.trim();
             if(!u || !p) return alert("Заполните поля");
             
-            // ПОДКЛЮЧЕНИЕ К RENDER (Secure WSS)
             ws = new WebSocket(`wss://${SERVER_URL}`);
             
             ws.onopen = () => ws.send(JSON.stringify({type: 'auth_req', action: a, username: u, password: p}));
@@ -354,6 +433,7 @@
                     myNick=d.nick; myAvatar=d.avatar; myBio=d.bio; 
                     $('auth-screen').style.display='none'; $('app').style.display='flex'; 
                     initApp(); loadTheme(); Notification.requestPermission();
+                    initDevices(); // Загрузка списка устройств
                 }
                 else if(d.type==='auth_error') { alert(d.text); ws.close(); }
             };
@@ -366,6 +446,25 @@
             document.addEventListener('dragover', e => { e.preventDefault(); $('drop-zone').style.display='flex'; });
             document.addEventListener('dragleave', e => { if(e.clientX===0 && e.clientY===0) $('drop-zone').style.display='none'; });
             document.addEventListener('drop', e => { e.preventDefault(); $('drop-zone').style.display='none'; handleFiles(e.dataTransfer.files); });
+        }
+
+        // --- DEVICE ENUMERATION ---
+        async function initDevices() {
+            try {
+                await navigator.mediaDevices.getUserMedia({audio: true}); // Request perm to see labels
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                const aSel = $('audio-src');
+                const vSel = $('video-src');
+                aSel.innerHTML = ''; vSel.innerHTML = '';
+                
+                devices.forEach(d => {
+                    const opt = document.createElement('option');
+                    opt.value = d.deviceId;
+                    opt.text = d.label || `Device ${d.deviceId.slice(0,5)}...`;
+                    if(d.kind === 'audioinput') aSel.appendChild(opt);
+                    else if(d.kind === 'videoinput') vSel.appendChild(opt);
+                });
+            } catch(e) { console.log("Media perm err:", e); }
         }
 
         function handleMsg(d) {
@@ -452,7 +551,6 @@
                         </div>`;
                 });
                 content += `</div>`;
-                // Defer poll update
                 setTimeout(()=>updatePollUI(msg.id, msg.poll_results || {}), 0);
             }
             else if(msg.type==='image') content += `<img src="data:image/jpeg;base64,${msg.data}" class="media-img" onclick="viewImg(this.src)">`;
@@ -487,7 +585,7 @@
             $('messages').appendChild(div);
         }
         
-        // --- POLL LOGIC (FIXED) ---
+        // --- POLL LOGIC ---
         function openPollModal() { document.getElementById('poll-modal').showModal(); }
         function addPollOpt() { const i=document.createElement('input'); i.type='text'; i.className='poll-input'; i.placeholder=`Вариант ${document.querySelectorAll('.poll-input').length+1}`; document.getElementById('poll-opts').appendChild(i); }
         function createPoll() {
@@ -515,13 +613,21 @@
                 const txt = $(`pt-${mid}-${i}-p`);
                 if(fill) fill.style.width = `${pct}%`;
                 if(txt) txt.innerText = `${pct}% (${count})`;
+                
+                // Выделение, если голосовал я
+                if(results[i] && results[i].includes(myNick)) {
+                     const opt = fill.closest('.poll-opt');
+                     opt.style.border = "1px solid var(--primary)";
+                     opt.style.borderRadius = "8px";
+                }
             });
         }
 
-        // --- VOICE CALLS (WebRTC) ---
-        function startCallCheck() {
+        // --- VIDEO/AUDIO CALLS (WebRTC) ---
+        function startCallCheck(video) {
+            isVideoCall = video;
             if(context === 'room') {
-                if(confirm("Начать групповой звонок? Все участники группы увидят приглашение.")) startCall();
+                if(confirm(`Начать групповой ${video?'видео':''}звонок?`)) startCall();
             } else {
                 startCall();
             }
@@ -529,44 +635,63 @@
 
         async function startCall() {
             try {
-                localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                const audioId = $('audio-src').value;
+                const videoId = $('video-src').value;
+                
+                const constraints = {
+                    audio: audioId ? { deviceId: { exact: audioId } } : true,
+                    video: isVideoCall ? (videoId ? { deviceId: { exact: videoId } } : true) : false
+                };
+
+                localStream = await navigator.mediaDevices.getUserMedia(constraints);
+                
+                // Показываем свое видео
+                $('local-video').srcObject = localStream;
+                $('local-video').style.display = isVideoCall ? 'block' : 'none';
+
                 createPeerConnection();
                 localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
 
                 const offer = await peerConnection.createOffer();
                 await peerConnection.setLocalDescription(offer);
 
-                sendSignal({ type: 'offer', sdp: offer });
+                sendSignal({ type: 'offer', sdp: offer, isVideo: isVideoCall });
                 
-                showCallUI('outgoing', target);
+                showCallUI('outgoing', target, null);
                 inCall = true;
+                camEnabled = isVideoCall;
+                micEnabled = true;
+                updateCallButtons();
+
             } catch (e) {
-                alert("Ошибка доступа к микрофону: " + e);
+                alert("Ошибка доступа к устройствам: " + e);
             }
         }
 
         async function handleSignal(d) {
-            if (d.data.type === 'offer') {
-                // Incoming call
-                if(inCall) return; // Busy
-                callTarget = d.sender; // Set who is calling
+            const data = d.data;
+            if (data.type === 'offer') {
+                if(inCall) return; 
+                callTarget = d.sender;
+                isVideoCall = data.isVideo;
+                
                 const displayName = d.room_name ? `${d.sender} (в ${d.room_name})` : d.sender;
                 showCallUI('incoming', displayName, d.sender_avatar);
                 
-                window.pendingOffer = d.data.sdp;
+                window.pendingOffer = data.sdp;
                 window.pendingSender = d.sender; 
             } 
-            else if (d.data.type === 'answer') {
+            else if (data.type === 'answer') {
                 if(!inCall) return;
-                await peerConnection.setRemoteDescription(new RTCSessionDescription(d.data.sdp));
-                $('call-status').innerText = "Соединено";
+                await peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp));
+                $('call-status-ov').innerText = "Подключено";
             } 
-            else if (d.data.type === 'candidate') {
+            else if (data.type === 'candidate') {
                 if(inCall && peerConnection) {
-                    try { await peerConnection.addIceCandidate(new RTCIceCandidate(d.data.candidate)); } catch(e){}
+                    try { await peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate)); } catch(e){}
                 }
             }
-            else if (d.data.type === 'bye') {
+            else if (data.type === 'bye') {
                 closeCallUI();
             }
         }
@@ -574,10 +699,22 @@
         async function acceptCall() {
             $('call-incoming-ctrl').style.display='none';
             $('call-active-ctrl').style.display='flex';
-            $('call-status').innerText = "Соединение...";
+            $('call-status-ov').innerText = "Соединение...";
             
             try {
-                localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                const audioId = $('audio-src').value;
+                const videoId = $('video-src').value;
+                
+                const constraints = {
+                    audio: audioId ? { deviceId: { exact: audioId } } : true,
+                    video: isVideoCall ? (videoId ? { deviceId: { exact: videoId } } : true) : false
+                };
+
+                localStream = await navigator.mediaDevices.getUserMedia(constraints);
+                
+                $('local-video').srcObject = localStream;
+                $('local-video').style.display = isVideoCall ? 'block' : 'none';
+
                 createPeerConnection();
                 localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
                 
@@ -593,6 +730,9 @@
                 
                 inCall = true;
                 callTarget = window.pendingSender;
+                camEnabled = isVideoCall;
+                micEnabled = true;
+                updateCallButtons();
             } catch(e) {
                 alert("Ошибка звонка: " + e);
                 closeCallUI();
@@ -622,6 +762,9 @@
                 }
             };
             peerConnection.ontrack = (e) => {
+                // Для видео
+                $('remote-video').srcObject = e.streams[0];
+                // Для аудио (резерв)
                 $('remote-audio').srcObject = e.streams[0];
             };
         }
@@ -636,17 +779,20 @@
         function showCallUI(state, name, av) {
             const ov = $('call-overlay');
             ov.style.display = 'flex';
-            $('call-name').innerText = name;
-            $('call-avatar').style.backgroundImage = av ? `url(${av})` : '';
-            
+            $('call-name-ov').innerText = name;
+            $('call-avatar-ov').style.backgroundImage = av ? `url(${av})` : '';
+            $('call-info-wrap').style.display = state === 'incoming' ? 'block' : 'none'; // Скрываем инфо при активном разговоре для видео
+
             if(state === 'incoming') {
-                $('call-status').innerText = "Входящий звонок...";
+                $('call-status-ov').innerText = isVideoCall ? "Входящий видеозвонок..." : "Входящий звонок...";
                 $('call-incoming-ctrl').style.display = 'flex';
                 $('call-active-ctrl').style.display = 'none';
             } else {
-                $('call-status').innerText = "Звонок...";
+                $('call-status-ov').innerText = "Звонок...";
                 $('call-incoming-ctrl').style.display = 'none';
                 $('call-active-ctrl').style.display = 'flex';
+                // При исходящем покажем инфо пока не ответят
+                $('call-info-wrap').style.display = 'block';
             }
         }
 
@@ -658,6 +804,46 @@
             peerConnection = null;
             inCall = false;
             callTarget = null;
+            $('remote-video').srcObject = null;
+            $('local-video').srcObject = null;
+        }
+
+        // --- MEDIA CONTROLS ---
+        function toggleMic() {
+            if(localStream) {
+                const track = localStream.getAudioTracks()[0];
+                if(track) {
+                    micEnabled = !micEnabled;
+                    track.enabled = micEnabled;
+                    updateCallButtons();
+                }
+            }
+        }
+
+        function toggleCam() {
+            if(localStream) {
+                const track = localStream.getVideoTracks()[0];
+                if(track) {
+                    camEnabled = !camEnabled;
+                    track.enabled = camEnabled;
+                } else if(!track && !camEnabled) {
+                    // Если начали без видео, но хотим включить (сложнее, требует пересогласования, здесь просто тогл существующих треков)
+                    alert("Камера не была запущена при старте.");
+                }
+                updateCallButtons();
+            }
+        }
+
+        async function switchCam() {
+           // Переключение камеры "на лету" требует замены трека в PeerConnection
+           alert("Для смены устройства перезапустите звонок с выбранными настройками.");
+        }
+
+        function updateCallButtons() {
+            const m = $('btn-mic');
+            const c = $('btn-cam');
+            if(micEnabled) m.classList.remove('off'); else m.classList.add('off');
+            if(camEnabled) c.classList.remove('off'); else c.classList.add('off');
         }
 
         // --- STANDARD LOGIC ---
@@ -667,7 +853,7 @@
             else { ws.send(JSON.stringify({type:'msg', text:txt, replyTo:replyTo, ...(context==='pm'?{recipient:target}:{room_name:target})})); }
             $('msg-in').value=''; cancelReply();
         }
-        function toggleEmoji() { const e=$('emoji-picker'); e.style.display = e.style.display==='grid'?'none':'grid'; }
+        function toggleEmoji() { const e=$('emoji-picker'); e.style.display = e.style.display==='flex'?'none':'flex'; }
         function sendTyping() {
             if(typingTimer) return;
             typingTimer = setTimeout(() => {
@@ -695,7 +881,7 @@
         function tab(t) { currentTab=t; document.querySelectorAll('.sb-tab').forEach(b=>b.classList.remove('active')); event.target.classList.add('active'); $('add-room-btn').style.display=t==='rooms'?'block':'none'; renderList(); }
         function toggleSidebar() { $('sidebar').classList.toggle('open'); }
         function closeSidebarIfMobile() { $('sidebar').classList.remove('open'); }
-        function openSettings() { $('settings-modal').showModal(); $('my-bio').value=myBio||""; if(myAvatar)$('my-avatar-preview').style.backgroundImage=`url(${myAvatar})`; }
+        function openSettings() { $('settings-modal').showModal(); $('my-bio').value=myBio||""; if(myAvatar)$('my-avatar-preview').style.backgroundImage=`url(${myAvatar})`; initDevices(); }
         function updateTheme() { const p=$('cp-primary').value, b1=$('cp-bg1').value, b2=$('cp-bg2').value; document.documentElement.style.setProperty('--primary',p); document.documentElement.style.setProperty('--bg-grad',`linear-gradient(135deg, ${b1}, ${b2})`); document.documentElement.style.setProperty('--msg-me',`linear-gradient(135deg, ${p}, ${p}99)`); localStorage.setItem('neoTheme',JSON.stringify({p,b1,b2})); }
         function loadTheme() { const t=JSON.parse(localStorage.getItem('neoTheme')); if(t) { $('cp-primary').value=t.p; $('cp-bg1').value=t.b1; $('cp-bg2').value=t.b2; updateTheme(); } }
         function getAvatarStyle(u,av) { return av?`background-image:url(${av})`:`background:linear-gradient(45deg,#555,#777)`; }
@@ -707,7 +893,8 @@
         function openChat(c,t) { 
             context=c; target=t; 
             $('chat-title').innerText=t; $('chat-status').innerText=c==='pm'?'Личный чат':'Загрузка...'; 
-            $('call-btn').style.display = 'block';
+            $('call-btn').style.display = 'inline-block';
+            $('video-btn').style.display = 'inline-block';
             
             closeSidebarIfMobile(); renderList(); ws.send(JSON.stringify({type:'history_req',context,target})); cancelReply(); 
         }
